@@ -5,6 +5,7 @@ const Item = ({ title, image }) => {
 	return (
 		<View style={styles.item}>
 			<Image source={{ uri: image }} style={{ height: 40, width: 40 }} />
+			<Text style={styles.title}>{title}</Text>
 		</View>
 	);
 };
@@ -30,14 +31,13 @@ export default class conexionFetch extends Component {
 	}
 
 	async componentDidMount() {
-		await fetch("https://movies-app1.p.rapidapi.com/api/genres", options)
+		await fetch("https://movies-app1.p.rapidapi.com/api/movies", options)
 			.then((response) => response.json())
-			.then((response) => console.log("response -->", response))
 			.then(
 				(result) => {
-					console.warn("result -->", result);
+					//console.warn("result -->", result.results);
 					this.setState({
-						items: result.data.movies,
+						items: result.results,
 					});
 				},
 				(error) => {
@@ -49,14 +49,15 @@ export default class conexionFetch extends Component {
 			.catch((err) => console.error(err));
 	}
 	render() {
+		console.log(this.state.items);
 		return (
 			<View style={styles.container}>
 				<FlatList
 					data={this.state.items.length > 0 ? this.state.items : []}
 					renderItem={({ item }) => (
-						<Item title={item.title} image={item.small_cover_image} />
+						<Item title={item.title} image={item.image} />
 					)}
-					keyExtractor={(item) => item.id}
+					keyExtractor={(item) => item._id}
 				/>
 			</View>
 		);
