@@ -25,7 +25,7 @@ const DATA = [
 	},
 ];
 
-const Item = ({ item, onPress, backgroundColor, textColor }) => (
+const Item = ({ item, onPress, backgroundColor, textColor, showAlert }) => (
 	<TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
 		<View style={styles.items}>
 			<View style={styles.infoContainer}>
@@ -35,8 +35,17 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
 	</TouchableOpacity>
 );
 
-const OurFlatList = () => {
+const ListEmpty = () => {
+	return (
+		<View style={styles.emptyContainer}>
+			<Text style={styles.emptyText}>No hay datos</Text>
+		</View>
+	);
+};
+
+const OurFlatList = ({ showAlert }) => {
 	const [selectedId, setSelectedId] = useState(null);
+	console.log(showAlert);
 
 	const renderItem = ({ item }) => {
 		const backgroundColor = item.id === selectedId ? "#2D808F" : "#88FCF6";
@@ -45,7 +54,10 @@ const OurFlatList = () => {
 		return (
 			<Item
 				item={item}
-				onPress={() => setSelectedId(item.id)}
+				onPress={() => {
+					setSelectedId(item.id);
+					showAlert();
+				}}
 				backgroundColor={{ backgroundColor }}
 				textColor={{ color }}
 			/>
@@ -59,6 +71,7 @@ const OurFlatList = () => {
 				keyExtractor={(item) => item.id}
 				extraData={selectedId}
 				style={styles.list}
+				ListEmptyComponent={ListEmpty}
 			/>
 		</SafeAreaView>
 	);
